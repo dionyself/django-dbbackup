@@ -51,6 +51,8 @@ class PgDumpConnector(BaseCommandDBConnector):
 
         for table in self.exclude:
             cmd += ' --exclude-table-data={}'.format(table)
+        if self.data_only:
+            cmd += ' --data-only'
         if self.drop:
             cmd += ' --clean'
 

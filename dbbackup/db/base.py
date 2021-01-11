@@ -59,6 +59,7 @@ class BaseDBConnector(object):
     """
     extension = 'dump'
     exclude = []
+    data_only = False
 
     def __init__(self, database_name=None, **kwargs):
         from django.db import connections, DEFAULT_DB_ALIAS

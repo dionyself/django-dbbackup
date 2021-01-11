@@ -34,7 +34,9 @@ class Command(BaseDbBackupCommand):
         make_option("-O", "--output-path", default=None,
                     help="Specify where to store on local filesystem"),
         make_option("-x", "--exclude-tables", default=None,
-                    help="Exclude tables from backup")
+                    help="Exclude tables from backup"),
+        make_option("-D", "--data-only", action="store_true", default=False,
+                    help="Dump only the data, not the schema (data definitions)."),
     )
 
     @utils.email_uncaught_exception
@@ -52,6 +54,7 @@ class Command(BaseDbBackupCommand):
         self.filename = options.get('output_filename')
         self.path = options.get('output_path')
         self.exclude_tables = options.get("exclude_tables")
+        self.only_data = options.get("data_only")
         self.storage = get_storage()
 
         self.database = options.get('database') or ''
@@ -61,6 +64,8 @@ class Command(BaseDbBackupCommand):
             self.connector = get_connector(database_key)
             if self.connector and self.exclude_tables:
                 self.connector.exclude.extend(list(self.exclude_tables.replace(" ", "").split(',')))
+            if self.connector and self.only_data:
+                self.connector.data_only = True
             database = self.connector.settings
             try:
                 self._save_new_backup(database)
