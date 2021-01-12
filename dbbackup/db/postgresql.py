@@ -50,7 +50,7 @@ class PgDumpConnector(BaseCommandDBConnector):
         cmd = cmd + create_postgres_uri(self)
 
         for table in self.exclude:
-            cmd += ' --exclude-table-data={}'.format(table)
+            cmd += ' --exclude-table={}'.format(table)
         if self.data_only:
             cmd += ' --data-only'
         if self.drop:
@@ -115,7 +115,7 @@ class PgDumpBinaryConnector(PgDumpConnector):
 
         cmd += ' --format=custom'
         for table in self.exclude:
-            cmd += ' --exclude-table-data={}'.format(table)
+            cmd += ' --exclude-table={}'.format(table)
         cmd = '{} {} {}'.format(self.dump_prefix, cmd, self.dump_suffix)
         stdout, stderr = self.run_command(cmd, env=self.dump_env)
         return stdout
